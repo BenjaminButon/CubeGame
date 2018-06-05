@@ -16,10 +16,18 @@ class GameViewController: UIViewController {
     var scnScene: SCNScene!
     var cameraNode: SCNNode!
     var cubeNode: SCNNode!
+    var obstacleFactory: ObstacleFactory!
     var obstacles: [SCNNode] = []
     var moveTime: TimeInterval = 0
     var spawnTime: TimeInterval = 0
-    let startPosition = SCNVector3(x: -1.0, y: 1.0, z: 43.0)
+    let startCubePosition = SCNVector3(x: 0.0, y: 1.0, z: 43.0)
+    let startObstaclePosition : SCNVector3 = SCNVector3(x: 0.0, y: 0.0, z: 15.0)
+    let trackVectors: [SCNVector3] = [SCNVector3(x: -2.0, y: 1.0, z: 43.0),
+                                      SCNVector3(x: -1.0, y: 1.0, z: 43.0),
+                                      SCNVector3(x: 0.0, y: 1.0, z: 43.0),
+                                      SCNVector3(x: 1.0, y: 1.0, z: 43.0),
+                                      SCNVector3(x: 2.0, y: 1.0, z: 43.0)]
+    var curentTrack: Int = 2
     let duration = 0.3
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,14 +37,15 @@ class GameViewController: UIViewController {
         setFloar()
         setupLight()
         spawnCube()
-        spawnObstacle()
+        setupObstacleFactory()
+        spawnPattern()
     }
     
     func setupView(){
         self.scnView = self.view as! SCNView
         scnView.showsStatistics = true
         scnView.autoenablesDefaultLighting = true
-        scnView.allowsCameraControl = true
+        //scnView.allowsCameraControl = true
         scnView.delegate = self
     }
     func setupScene(){
@@ -59,22 +68,37 @@ class GameViewController: UIViewController {
         lightNode.light = light
         self.scnScene.rootNode.addChildNode(lightNode)
     }
+    func setupObstacleFactory(){
+        self.obstacleFactory = ObstacleFactory()
+    }
     func spawnCube(){
         let boxGeometry = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.0)
         boxGeometry.materials.first?.diffuse.contents = UIColor.green
         self.cubeNode = SCNNode(geometry: boxGeometry)
         cubeNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
-        cubeNode.position = self.startPosition
+        cubeNode.position = self.startCubePosition
         self.scnScene.rootNode.addChildNode(cubeNode)
     }
     func spawnObstacle(){
-        let geometry = SCNBox(width: 3.0, height: 1.0, length: 1.0, chamferRadius: 0.0)
+        let geometry = SCNBox(width: 2.0, height: 1.0, length: 1.0, chamferRadius: 0.0)
         geometry.materials.first?.diffuse.contents = UIColor.blue
         let obstacle = SCNNode(geometry: geometry)
-        obstacle.position = SCNVector3(x: 1.0, y: 1.0, z: 15.0)
+        obstacle.position = SCNVector3(x: -1.5, y: 1.0, z: 30.0)
         obstacle.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
         self.obstacles.append(obstacle)
         self.scnScene.rootNode.addChildNode(obstacle)
+    }
+    func spawnPattern(){
+        var startPosition = self.startObstaclePosition
+        self.obstacles = self.obstacleFactory.randomPattern()
+        for node in obstacles{
+            node.position.z += startPosition.z
+            node.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+            if let box = node.geometry as? SCNBox{
+                startPosition.z += Float(box.length) + 4.0
+            }
+            self.scnScene.rootNode.addChildNode(node)
+        }
     }
     func forceCube(){
         let force = SCNVector3(0.0, 1.5, 0.0)
@@ -93,27 +117,35 @@ class GameViewController: UIViewController {
         var to: SCNVector3
         switch direction{
         case .forward:
-            around = SCNVector3(-1.0, 0.0, 0.0)
+            around = SCNVector3(1.0, 0.0, 0.0)
             to = position
             break
         case .left:
-            around = SCNVector3(0.0, 0.0, 1.0)
-            to = SCNVector3(position.x - 1, position.y, position.z)
-            break
+            if curentTrack - 1 < 0{
+                return
+            } else {
+                curentTrack -= 1
+                around = SCNVector3(0.0, 0.0, 1.0)
+                to = trackVectors[curentTrack]
+                break
+            }
         case .right:
-            around = SCNVector3(0.0, 0.0, -1.0)
-            to = SCNVector3(position.x + 1, position.y, position.z)
-            break
+            if curentTrack + 1 > 4{
+                return
+            } else {
+                curentTrack += 1
+                around = SCNVector3(0.0, 0.0, -1.0)
+                to = trackVectors[curentTrack]
+                break
+            }
         }
         let rotate = SCNAction.rotate(by: CGFloat(90 * Float.pi / 180), around: around, duration: self.duration)
         let move = SCNAction.move(to: to, duration: self.duration)
-        cubeNode.runAction(rotate)
-        cubeNode.runAction(move)
-        if direction == .forward{
-            for obstacle in self.obstacles{
-                moveObstacle(obstacle)
-            }
+        if direction == .left || direction == .right{
+            self.cubeNode.removeAllActions()
         }
+        let group = SCNAction.group([rotate, move])
+        cubeNode.runAction(group)
     }
     func cleaneScene(){
         for obstacle in obstacles{
@@ -135,32 +167,12 @@ class GameViewController: UIViewController {
         floarNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
         self.scnScene.rootNode.addChildNode(floarNode)
     }
-    @IBAction func moveForward(_ sender: UIPanGestureRecognizer) {
-
-        if sender.state == UIGestureRecognizerState.ended{
-            cubeRotation(direction: .forward)
-        }
+    @IBAction func moveRight(_ sender: UISwipeGestureRecognizer) {
+        self.cubeRotation(direction: .right)
     }
-    @IBAction func moveSide(_ sender: UISwipeGestureRecognizer) {
-        print("Ok")
-        switch sender.direction{
-        case .up:
-            cubeRotation(direction: .forward)
-            break
-        case .left:
-            cubeRotation(direction: .left)
-            break
-        case .right:
-            cubeRotation(direction: .right)
-            break
-        default:
-            break
-        }
+    @IBAction func moveLeft(_ sender: UISwipeGestureRecognizer) {
+        self.cubeRotation(direction: .left)
     }
-    @IBAction func tap(_ sender: UITapGestureRecognizer) {
-        cubeRotation(direction: .left)
-    }
-    
 }
 
 extension GameViewController: SCNSceneRendererDelegate{
@@ -168,11 +180,14 @@ extension GameViewController: SCNSceneRendererDelegate{
         let moveTimeDif = time - moveTime
         let spawnTimeDif = time - spawnTime
         if Double(moveTimeDif) > duration{
-            cubeRotation(direction: .forward)
+            //cubeRotation(direction: .forward)
+            for obstacle in obstacles{
+                moveObstacle(obstacle)
+            }
             moveTime = time
         }
         if Double(spawnTimeDif) > 1.5{
-            spawnObstacle()
+            //spawnObstacle()
             spawnTime = time
         }
         cleaneScene()

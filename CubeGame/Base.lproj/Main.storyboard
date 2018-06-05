@@ -20,27 +20,21 @@
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="z1G-tw-v2C" appends="YES" id="50c-1g-zJD"/>
-                            <outletCollection property="gestureRecognizers" destination="v0t-8h-sf2" appends="YES" id="3I2-pI-RAD"/>
-                            <outletCollection property="gestureRecognizers" destination="JLI-Pl-RfS" appends="YES" id="Nw8-hE-eCh"/>
+                            <outletCollection property="gestureRecognizers" destination="D7h-Xc-qwE" appends="YES" id="Vyz-HS-T1y"/>
                         </connections>
                     </sceneKitView>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="z1G-tw-v2C">
+                <swipeGestureRecognizer direction="right" id="z1G-tw-v2C" userLabel="swipeRight">
                     <connections>
-                        <action selector="moveSide:" destination="BV1-FR-VrT" id="1nT-d4-Ju3"/>
+                        <action selector="moveRight:" destination="BV1-FR-VrT" id="UWt-vs-BOH"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="v0t-8h-sf2">
+                <swipeGestureRecognizer direction="left" id="D7h-Xc-qwE" userLabel="swipeLeft">
                     <connections>
-                        <action selector="moveForward:" destination="BV1-FR-VrT" id="eoE-St-aV8"/>
+                        <action selector="moveLeft:" destination="BV1-FR-VrT" id="fJ4-YH-dkl"/>
                     </connections>
-                </panGestureRecognizer>
-                <tapGestureRecognizer id="JLI-Pl-RfS">
-                    <connections>
-                        <action selector="tap:" destination="BV1-FR-VrT" id="Wnp-K0-yrD"/>
-                    </connections>
-                </tapGestureRecognizer>
+                </swipeGestureRecognizer>
             </objects>
         </scene>
     </scenes>
