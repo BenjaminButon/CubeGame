@@ -42,6 +42,7 @@ class ObstacleFactory{
         obstacle6.position = SCNVector3(x: -1.5, y: 1.0, z: 0.0)
         let obstacle7 = SCNNode(geometry: SCNBox(width: 2.0, height: 1.0, length: 1.0, chamferRadius: 0.0))
         obstacle7.position = SCNVector3(x: 1.5, y: 1.0, z: 0.0)
+        firstPattern = [SCNNode]()
         firstPattern.append(obstacle1)
         firstPattern.append(obstacle2)
         firstPattern.append(obstacle3)
