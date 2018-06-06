@@ -32,6 +32,7 @@ class GameViewController: UIViewController {
     var score = 0
     var play = false
     var gameOver = false
+    var moveFlag = true
     var moveTime: TimeInterval = 0
     var spawnTime: TimeInterval = 0
     var obstacles: [SCNNode] = []
@@ -78,6 +79,8 @@ class GameViewController: UIViewController {
     func setupLight(){
         let light = SCNLight()
         light.type = .omni
+        light.castsShadow = true
+        light.shadowMode = .forward
         light.intensity = 5000.0
         self.lightNode = SCNNode()
         lightNode.position = SCNVector3(x: 10.0, y: 3.0, z: 0.0)
@@ -171,10 +174,9 @@ class GameViewController: UIViewController {
         }
         let rotate = SCNAction.rotate(by: CGFloat(90 * Float.pi / 180), around: around, duration: self.duration)
         let move = SCNAction.move(to: to, duration: self.duration)
-        if direction == .left || direction == .right{
-            self.cubeNode.removeAllActions()
-        }
-        cubeNode.runAction(move)
+        let group = SCNAction.group([rotate, move])
+        cubeNode.runAction(group)
+        moveFlag = true
     }
     //MARK: Reset
     func resetVariables(){
@@ -182,6 +184,7 @@ class GameViewController: UIViewController {
         score = 0
         play = false
         gameOver = false
+        moveFlag = true
         moveTime = 0
         spawnTime = 0
         obstacles = [SCNNode]()
@@ -223,10 +226,14 @@ class GameViewController: UIViewController {
     }
     //MARK: @IBAction
     @IBAction func moveRight(_ sender: UISwipeGestureRecognizer) {
-        self.cubeRotation(direction: .right)
+        if moveFlag == true{
+            self.cubeRotation(direction: .right)
+        }
     }
     @IBAction func moveLeft(_ sender: UISwipeGestureRecognizer) {
-        self.cubeRotation(direction: .left)
+        if moveFlag == true{
+            self.cubeRotation(direction: .left)
+        }
     }
     @IBAction func tapStart(_ sender: UITapGestureRecognizer) {
         if gameOver == true{
@@ -282,7 +289,9 @@ extension GameViewController: SCNPhysicsContactDelegate{
         if (contact.nodeA == self.floarNode || contact.nodeB == self.floarNode){
             return
         } else {
-            print("contact")
+            #if DEBUG
+                print("contact")
+            #endif
             DispatchQueue.main.async {
                 self.play = false
                 self.gameOver = true
