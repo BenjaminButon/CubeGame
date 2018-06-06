@@ -20,15 +20,18 @@ class GameViewController: UIViewController {
     var obstacles: [SCNNode] = []
     var moveTime: TimeInterval = 0
     var spawnTime: TimeInterval = 0
-    let startCubePosition = SCNVector3(x: 0.0, y: 1.0, z: -3.0)
+    let startCubePosition = SCNVector3(x: 0.0, y: 1.0, z: -10.0)
     let startObstaclePosition : SCNVector3 = SCNVector3(x: 0.0, y: 1.0, z: -100.0)
-    let speed = 0.3
-    var start = true
-    let trackVectors: [SCNVector3] = [SCNVector3(x: -2.0, y: 1.0, z: 43.0),
-                                      SCNVector3(x: -1.0, y: 1.0, z: 43.0),
-                                      SCNVector3(x: 0.0, y: 1.0, z: 43.0),
-                                      SCNVector3(x: 1.0, y: 1.0, z: 43.0),
-                                      SCNVector3(x: 2.0, y: 1.0, z: 43.0)]
+    let speed = 0.1
+    var play = false
+    var lblStart: UILabel!
+    var lblScore: UILabel!
+    var score = 0
+    let trackVectors: [SCNVector3] = [SCNVector3(x: -2.0, y: 1.0, z: -10.0),
+                                      SCNVector3(x: -1.0, y: 1.0, z: -10.0),
+                                      SCNVector3(x: 0.0, y: 1.0, z: -10.0),
+                                      SCNVector3(x: 1.0, y: 1.0, z: -10.0),
+                                      SCNVector3(x: 2.0, y: 1.0, z: -10.0)]
     var curentTrack: Int = 2
     let duration = 0.3
     override func viewDidLoad() {
@@ -48,6 +51,7 @@ class GameViewController: UIViewController {
         //scnView.allowsCameraControl = true
         scnView.delegate = self
         scnView.isPlaying = true
+        setupLabels()
     }
     func setupScene(){
         self.scnScene = SCNScene()
@@ -57,7 +61,7 @@ class GameViewController: UIViewController {
     func setupCamera(){
         self.cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
-        cameraNode.position = SCNVector3(0.0, 3.0, 50.0)
+        cameraNode.position = SCNVector3(x: 0.0, y: 3.0, z: 0.0)
         self.scnScene.rootNode.addChildNode(cameraNode)
     }
     func setupLight(){
@@ -72,12 +76,28 @@ class GameViewController: UIViewController {
     func setupObstacleFactory(){
         self.obstacleFactory = ObstacleFactory()
     }
+    func setupLabels(){
+        self.lblStart = UILabel()
+        lblStart.text = "Tap to start"
+        lblStart.contentMode = .center
+        let lblStartPosition = CGRect(x: 0.0, y: 60.0, width: self.view.bounds.width, height: 20.0)
+        lblStart.frame = lblStartPosition
+        lblStart.textAlignment = .center
+        lblStart.textColor = UIColor.black
+        lblStart.alpha = 1.0
+        self.scnView.addSubview(self.lblStart)
+        self.lblScore = UILabel()
+        lblScore.text = String(score)
+        lblScore.contentMode = .center
+        let lblScorePosition = CGRect(x: 0.0, y: 60.0, width: self.view.bounds.width, height: 20.0)
+        lblScore.frame = lblScorePosition
+        lblScore.textAlignment = .center
+        lblScore.textColor = UIColor.black
+        lblScore.alpha = 1.0
+        lblScore.isHidden = true
+        self.scnView.addSubview(lblScore)
+    }
     func spawnCube(){
-//        let boxGeometry = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.0)
-//        boxGeometry.materials.first?.diffuse.contents = UIColor.green
-//        self.cubeNode = SCNNode(geometry: boxGeometry)
-//        cubeNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
-//        cubeNode.position = self.startCubePosition
         cubeNode = Cube.spawnCubeAt(startCubePosition)
         self.scnScene.rootNode.addChildNode(cubeNode)
     }
@@ -91,7 +111,6 @@ class GameViewController: UIViewController {
         self.scnScene.rootNode.addChildNode(obstacle)
     }
     func spawnPattern(){
-        print("Spawn pattern")
         self.obstacleFactory = ObstacleFactory()
         var startPosition = self.startObstaclePosition
         for node in self.obstacleFactory.randomPattern(){
@@ -99,19 +118,9 @@ class GameViewController: UIViewController {
         }
         for node in obstacles{
             node.position.z += -100
-            print(startPosition.z)
             node.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
-//            if let box = node.geometry as? SCNBox{
-//                startPosition.z -= Float(box.length) - 4.0
-//            }
             self.scnScene.rootNode.addChildNode(node)
         }
-//        let geometry = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.0)
-//        let newNode = SCNNode(geometry: geometry)
-//        newNode.position = startObstaclePosition
-//        newNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
-//        obstacles.append(newNode)
-//        self.scnScene.rootNode.addChildNode(newNode)
     }
     func forceCube(){
         let force = SCNVector3(0.0, 1.5, 0.0)
@@ -162,23 +171,6 @@ class GameViewController: UIViewController {
         cubeNode.runAction(group)
     }
     func cleaneScene(){
-//        for index in 0..<obstacles.count{
-//            if obstacles[index].position.z > 47.0{
-//                obstacles[index].removeFromParentNode()
-//                obstacles.remove(at: index)
-//                print("Remove node")
-//            }
-//        }
-        
-//        if let obstacle = obstacles.first{
-//            if Double(obstacle.position.z) > -10.0{
-//                //print(obstacle.position.x.description + "\t" + obstacle.position.y.description + "\t" + obstacle.position.z.description)
-//                print("Remove time")
-//                for obstacle in obstacles{
-//                    obstacle.removeFromParentNode()
-//                }
-//            }
-//        }
         if let obstacle = obstacles.last{
             if Double(obstacle.position.z) > 0.0{
                 obstacle.removeFromParentNode()
@@ -206,56 +198,46 @@ class GameViewController: UIViewController {
         self.cubeRotation(direction: .left)
     }
     @IBAction func tapStart(_ sender: UITapGestureRecognizer) {
-        //if start == true{
-            //spawnPattern()
-            //start = false
-        //}
+        play = true
+        self.lblStart.isHidden = true
+        self.lblScore.isHidden = false
     }
 }
 
 extension GameViewController: SCNSceneRendererDelegate{
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        let moveTimeDif = time - moveTime
-        let spawnTimeDif = time - spawnTime
-        //print(spawnTimeDif)
-        if Double(moveTimeDif) > speed{
-            //cubeRotation(direction: .forward)
-            for obstacle in obstacles{
-                moveObstacle(obstacle)
-//                if Double(obstacle.position.z) > 0.0{
-//                    obstacle.removeFromParentNode()
-//                    print(obstacles.count)
-//                    obstacles.popLast()
-//                    print(obstacles.count)
-//                }
+        if play == true {
+            let moveTimeDif = time - moveTime
+            let spawnTimeDif = time - spawnTime
+            if Double(moveTimeDif) > speed{
+                for obstacle in obstacles{
+                    moveObstacle(obstacle)
+                }
+                moveTime = time
             }
-            moveTime = time
-        }
-        if Double(spawnTimeDif) > 7.5{
-            print("Spawn Time")
-            spawnPattern()
-            spawnTime = time
-        }
-//        if let obstacle = obstacles.first{
-//            if Double(obstacle.position.z) > -24.0{
-//                print("Spawn time")
-//                spawnPattern()
-//            }
-//        }
-        for node in self.scnScene.rootNode.childNodes {
-            if node.position.z > 0{
-                node.removeFromParentNode()
+            if Double(spawnTimeDif) > 2.7{
+                spawnPattern()
+                spawnTime = time
             }
-        }
-        if let obstacle = obstacles.last{
-            if obstacle.position.z > 0{
-                obstacles.popLast()
-                print(obstacles.count)
+            for node in self.scnScene.rootNode.childNodes {
+                if node.position.z > 0{
+                    node.removeFromParentNode()
+                }
+            }
+            if let obstacle = obstacles.first{
+                if Double(obstacle.position.z) > -8.0{
+                    DispatchQueue.main.async {
+                        self.score += 1
+                        self.lblScore.text = String(self.score)
+                    }
+                }
+                if obstacle.position.z > 0{
+                    obstacles.removeFirst()
+                }
             }
         }
     }
 
 }
-
 
 
