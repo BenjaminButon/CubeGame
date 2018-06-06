@@ -14,6 +14,7 @@
 		503C26B220C6AC0800169C67 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 503C26B020C6AC0800169C67 /* LaunchScreen.storyboard */; };
 		503C26BA20C6BE4B00169C67 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503C26B920C6BE4B00169C67 /* Direction.swift */; };
 		5069C56320C7C8AF003051E7 /* Cube.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5069C56220C7C8AF003051E7 /* Cube.swift */; };
+		50F074B020C8166A00B9DF7B /* SCNNode + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F074AF20C8166A00B9DF7B /* SCNNode + Extension.swift */; };
 		50FB342A20C737920084D465 /* Obstacle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FB342920C737920084D465 /* Obstacle.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		503C26B320C6AC0800169C67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		503C26B920C6BE4B00169C67 /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		5069C56220C7C8AF003051E7 /* Cube.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cube.swift; sourceTree = "<group>"; };
+		50F074AF20C8166A00B9DF7B /* SCNNode + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode + Extension.swift"; sourceTree = "<group>"; };
 		50FB342920C737920084D465 /* Obstacle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Obstacle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,7 @@
 				503C26B320C6AC0800169C67 /* Info.plist */,
 				503C26B920C6BE4B00169C67 /* Direction.swift */,
 				50FB342920C737920084D465 /* Obstacle.swift */,
+				50F074AF20C8166A00B9DF7B /* SCNNode + Extension.swift */,
 			);
 			path = CubeGame;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 				5069C56320C7C8AF003051E7 /* Cube.swift in Sources */,
 				503C26A620C6AC0800169C67 /* AppDelegate.swift in Sources */,
 				50FB342A20C737920084D465 /* Obstacle.swift in Sources */,
+				50F074B020C8166A00B9DF7B /* SCNNode + Extension.swift in Sources */,
 				503C26BA20C6BE4B00169C67 /* Direction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,7 +20,9 @@ class Cube{
         cubeGeometry.materials.first?.diffuse.contents = color
         let cubeNode = SCNNode(geometry: cubeGeometry)
         cubeNode.position = position
-        cubeNode.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
+        cubeNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+        cubeNode.physicsBody?.contactTestBitMask = (cubeNode.physicsBody?.collisionBitMask)!
         return cubeNode
     }
+    
 }
