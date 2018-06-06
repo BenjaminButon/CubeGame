@@ -20,9 +20,9 @@ class GameViewController: UIViewController {
     var obstacles: [SCNNode] = []
     var moveTime: TimeInterval = 0
     var spawnTime: TimeInterval = 0
-    let startCubePosition = SCNVector3(x: 0.0, y: 1.0, z: 43.0)
+    let startCubePosition = SCNVector3(x: 0.0, y: 1.0, z: -3.0)
     let startObstaclePosition : SCNVector3 = SCNVector3(x: 0.0, y: 1.0, z: -100.0)
-    let speed = 0.1
+    let speed = 0.3
     var start = true
     let trackVectors: [SCNVector3] = [SCNVector3(x: -2.0, y: 1.0, z: 43.0),
                                       SCNVector3(x: -1.0, y: 1.0, z: 43.0),
@@ -38,14 +38,14 @@ class GameViewController: UIViewController {
         setupCamera()
         setFloar()
         setupLight()
-        //spawnCube()
+        spawnCube()
     }
     
     func setupView(){
         self.scnView = self.view as! SCNView
         scnView.showsStatistics = true
         scnView.autoenablesDefaultLighting = true
-        scnView.allowsCameraControl = true
+        //scnView.allowsCameraControl = true
         scnView.delegate = self
         scnView.isPlaying = true
     }
@@ -57,7 +57,7 @@ class GameViewController: UIViewController {
     func setupCamera(){
         self.cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
-        cameraNode.position = SCNVector3(0.0, 3.0, 20.0)
+        cameraNode.position = SCNVector3(0.0, 3.0, 50.0)
         self.scnScene.rootNode.addChildNode(cameraNode)
     }
     func setupLight(){
@@ -98,11 +98,12 @@ class GameViewController: UIViewController {
             self.obstacles.append(node)
         }
         for node in obstacles{
-            node.position.z += startPosition.z
+            node.position.z += -100
+            print(startPosition.z)
             node.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
-            if let box = node.geometry as? SCNBox{
-                startPosition.z -= Float(box.length) - 4.0
-            }
+//            if let box = node.geometry as? SCNBox{
+//                startPosition.z -= Float(box.length) - 4.0
+//            }
             self.scnScene.rootNode.addChildNode(node)
         }
 //        let geometry = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.0)
@@ -199,14 +200,14 @@ class GameViewController: UIViewController {
         self.scnScene.rootNode.addChildNode(floarNode)
     }
     @IBAction func moveRight(_ sender: UISwipeGestureRecognizer) {
-        //self.cubeRotation(direction: .right)
+        self.cubeRotation(direction: .right)
     }
     @IBAction func moveLeft(_ sender: UISwipeGestureRecognizer) {
-        //self.cubeRotation(direction: .left)
+        self.cubeRotation(direction: .left)
     }
     @IBAction func tapStart(_ sender: UITapGestureRecognizer) {
         //if start == true{
-            spawnPattern()
+            //spawnPattern()
             //start = false
         //}
     }
@@ -230,17 +231,17 @@ extension GameViewController: SCNSceneRendererDelegate{
             }
             moveTime = time
         }
-//        if Double(spawnTimeDif) > 0.0{
-//            print("Spawn Time")
-//            spawnPattern()
-//            spawnTime = time
-//        }
-        if let obstacle = obstacles.first{
-            if Double(obstacle.position.z) > -80.0{
-                //print("Spawn time")
-                //spawnPattern()
-            }
+        if Double(spawnTimeDif) > 7.5{
+            print("Spawn Time")
+            spawnPattern()
+            spawnTime = time
         }
+//        if let obstacle = obstacles.first{
+//            if Double(obstacle.position.z) > -24.0{
+//                print("Spawn time")
+//                spawnPattern()
+//            }
+//        }
         for node in self.scnScene.rootNode.childNodes {
             if node.position.z > 0{
                 node.removeFromParentNode()
