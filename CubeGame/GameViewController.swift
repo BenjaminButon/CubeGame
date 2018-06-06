@@ -21,7 +21,8 @@ class GameViewController: UIViewController {
     var moveTime: TimeInterval = 0
     var spawnTime: TimeInterval = 0
     let startCubePosition = SCNVector3(x: 0.0, y: 1.0, z: 43.0)
-    let startObstaclePosition : SCNVector3 = SCNVector3(x: 0.0, y: 0.0, z: 15.0)
+    let startObstaclePosition : SCNVector3 = SCNVector3(x: 0.0, y: 0.0, z: 0.0)
+    let speed = 0.1
     let trackVectors: [SCNVector3] = [SCNVector3(x: -2.0, y: 1.0, z: 43.0),
                                       SCNVector3(x: -1.0, y: 1.0, z: 43.0),
                                       SCNVector3(x: 0.0, y: 1.0, z: 43.0),
@@ -72,11 +73,12 @@ class GameViewController: UIViewController {
         self.obstacleFactory = ObstacleFactory()
     }
     func spawnCube(){
-        let boxGeometry = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.0)
-        boxGeometry.materials.first?.diffuse.contents = UIColor.green
-        self.cubeNode = SCNNode(geometry: boxGeometry)
-        cubeNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
-        cubeNode.position = self.startCubePosition
+//        let boxGeometry = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.0)
+//        boxGeometry.materials.first?.diffuse.contents = UIColor.green
+//        self.cubeNode = SCNNode(geometry: boxGeometry)
+//        cubeNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+//        cubeNode.position = self.startCubePosition
+        cubeNode = Cube.spawnCubeAt(startCubePosition)
         self.scnScene.rootNode.addChildNode(cubeNode)
     }
     func spawnObstacle(){
@@ -108,7 +110,7 @@ class GameViewController: UIViewController {
     func moveObstacle(_ obstacle: SCNNode){
         let position = obstacle.position
         let vector = SCNVector3(position.x, position.y, position.z + 1)
-        let actionMove = SCNAction.move(to: vector, duration: self.duration)
+        let actionMove = SCNAction.move(to: vector, duration: self.speed)
         obstacle.runAction(actionMove)
     }
     func cubeRotation(direction: Direction){
@@ -179,7 +181,7 @@ extension GameViewController: SCNSceneRendererDelegate{
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         let moveTimeDif = time - moveTime
         let spawnTimeDif = time - spawnTime
-        if Double(moveTimeDif) > duration{
+        if Double(moveTimeDif) > speed{
             //cubeRotation(direction: .forward)
             for obstacle in obstacles{
                 moveObstacle(obstacle)

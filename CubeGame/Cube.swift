@@ -10,7 +10,7 @@ import Foundation
 import SceneKit
 
 
-let size: CGFloat = 1.0
+let size: CGFloat = 0.8
 let color = UIColor.green
 
 class Cube{
