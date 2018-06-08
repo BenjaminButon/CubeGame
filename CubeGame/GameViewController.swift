@@ -77,7 +77,6 @@ class GameViewController: UIViewController {
         self.scnScene = SCNScene()
         self.scnView.scene = scnScene
         scnScene.physicsWorld.contactDelegate = self
-        let imageUrl = Bundle.main.url(forResource: "background", withExtension: "jpg")
         scnScene.background.contents = UIImage(named: "background.jpg")
     }
     func setupCamera(){
@@ -150,7 +149,7 @@ class GameViewController: UIViewController {
         self.obstacleFactory = ObstacleFactory()
         for node in self.obstacleFactory.randomPattern(){
             node.geometry?.materials.first?.diffuse.contents = UIColor.darkGray
-            node.position.z += -100
+            node.position.z -= 100
             let physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
             physicsBody.mass = 50.0
             physicsBody.contactTestBitMask = physicsBody.collisionBitMask
@@ -215,10 +214,16 @@ class GameViewController: UIViewController {
                 to = SCNVector3(trackVectors[curentTrack], Double(position.y), Double(position.z))
                 break
             }
+        case .back:
+            around = SCNVector3(1.0, 0.0, 0.0)
+            to = position
+            break
         }
         var rotate: SCNAction
         if direction == .forward{
             rotate = SCNAction.rotate(by: CGFloat(90 * Float.pi / 180), around: around, duration: 0.6)
+        } else if direction == .back {
+            rotate = SCNAction.rotate(by: CGFloat(360 * Float.pi / 180), around: around, duration: 1.0)
         } else {
             rotate = SCNAction.rotate(by: CGFloat(90 * Float.pi / 180), around: around, duration: self.duration)
         }
@@ -302,6 +307,15 @@ class GameViewController: UIViewController {
             print(cubeNode.position)
         }
     }
+    @IBAction func swipeDown(_ sender: UISwipeGestureRecognizer) {
+        if moveState == .canMove{
+            moveState = .isMoving
+            let rotate = self.cubeRotation(direction: .back)
+            let returnToTrack = self.returnToTrack()
+            let action = SCNAction.sequence([rotate, returnToTrack])
+            cubeNode.runAction(action, completionHandler: {self.moveState = .canMove})
+        }
+    }
     @IBAction func tapStart(_ sender: UITapGestureRecognizer) {
         switch moveState {
         case .canMove:
@@ -343,7 +357,10 @@ extension GameViewController: SCNSceneRendererDelegate{
                 moveTime = time
             }
             if let obstacle = obstacles.last{
-                if Double(obstacle.position.z) > -50.0{
+                if Double(obstacle.position.z) > -45.0{
+                    for node in obstacles{
+                        print(node.position.z)
+                    }
                     spawnPattern()
                 }
             }
@@ -368,17 +385,19 @@ extension GameViewController: SCNPhysicsContactDelegate{
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         if (contact.nodeA == self.floarNode || contact.nodeB == self.floarNode){
             return
-        } else {
-            #if DEBUG
-                //print("contact")
-            #endif
-            DispatchQueue.main.async {
-                self.state = .gameOver
-                self.moveState = .isMoving
-                self.lblScore.isHidden = true
-                self.lblStart.isHidden = false
-                self.lblStart.text = "Game over"
-            }
+        }
+        if (contact.nodeA != self.cubeNode && contact.nodeB != self.cubeNode){
+            return
+        }
+        #if DEBUG
+            //print("contact")
+        #endif
+        DispatchQueue.main.async {
+            self.state = .gameOver
+            self.moveState = .isMoving
+            self.lblScore.isHidden = true
+            self.lblStart.isHidden = false
+            self.lblStart.text = "Game over"
         }
     }
 }

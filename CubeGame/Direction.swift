@@ -13,4 +13,5 @@ enum Direction{
     case forward
     case left
     case right
+    case back
 }

@@ -22,6 +22,7 @@
                             <outletCollection property="gestureRecognizers" destination="z1G-tw-v2C" appends="YES" id="50c-1g-zJD"/>
                             <outletCollection property="gestureRecognizers" destination="D7h-Xc-qwE" appends="YES" id="Vyz-HS-T1y"/>
                             <outletCollection property="gestureRecognizers" destination="v1p-D7-IhN" appends="YES" id="vjs-EX-bcF"/>
+                            <outletCollection property="gestureRecognizers" destination="NcL-1o-jxp" appends="YES" id="H8k-xc-EZ0"/>
                         </connections>
                     </sceneKitView>
                 </viewController>
@@ -41,6 +42,11 @@
                         <action selector="tapStart:" destination="BV1-FR-VrT" id="ZNl-bk-ttr"/>
                     </connections>
                 </tapGestureRecognizer>
+                <swipeGestureRecognizer direction="down" id="NcL-1o-jxp" userLabel="swipeDown">
+                    <connections>
+                        <action selector="swipeDown:" destination="BV1-FR-VrT" id="olt-F7-8kb"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
         </scene>
     </scenes>
