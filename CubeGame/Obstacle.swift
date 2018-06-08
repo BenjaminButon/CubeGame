@@ -9,8 +9,9 @@
 import Foundation
 import SceneKit
 
-
 class ObstacleFactory{
+    let height: CGFloat = 0.8
+    let length: CGFloat = 0.5
     var firstPattern : [SCNNode] = []
     var secondPattern : [SCNNode] = []
     var patterns : [[SCNNode]]
@@ -28,20 +29,20 @@ class ObstacleFactory{
     }
     
     func setupFirstPattern(){
-        let obstacle1 = SCNNode(geometry: SCNBox(width: 2.0, height: 1.0, length: 1.0, chamferRadius: 0.0))
-        obstacle1.position = SCNVector3(x: -1.5, y: 1.0, z: 40.0)
-        let obstacle2 = SCNNode(geometry: SCNBox(width: 2.0, height: 1.0, length: 1.0, chamferRadius: 0.0))
-        obstacle2.position = SCNVector3(x: 1.5, y: 1.0, z: 32.0)
-        let obstacle3 = SCNNode(geometry: SCNBox(width: 3.0, height: 1.0, length: 1.0, chamferRadius: 0.0))
-        obstacle3.position = SCNVector3(x: 1.0, y: 1.0, z: 24.0)
-        let obstacle4 = SCNNode(geometry: SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.0))
-        obstacle4.position = SCNVector3(x: 2.0, y: 1.0, z: 16.0)
-        let obstacle5 = SCNNode(geometry: SCNBox(width: 3.0, height: 1.0, length: 1.0, chamferRadius: 0.0))
-        obstacle5.position = SCNVector3(x: 0.0, y: 1.0, z: 8.0)
-        let obstacle6 = SCNNode(geometry: SCNBox(width: 2.0, height: 1.0, length: 1.0, chamferRadius: 0.0))
-        obstacle6.position = SCNVector3(x: -1.5, y: 1.0, z: 0.0)
-        let obstacle7 = SCNNode(geometry: SCNBox(width: 2.0, height: 1.0, length: 1.0, chamferRadius: 0.0))
-        obstacle7.position = SCNVector3(x: 1.5, y: 1.0, z: 0.0)
+        let obstacle1 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle1.position = SCNVector3(x: -1.5, y: Float(height), z: 40.0)
+        let obstacle2 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle2.position = SCNVector3(x: 1.5, y: Float(height), z: 32.0)
+        let obstacle3 = SCNNode(geometry: SCNBox(width: 3.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle3.position = SCNVector3(x: 1.0, y: Float(height), z: 24.0)
+        let obstacle4 = SCNNode(geometry: SCNBox(width: 1.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle4.position = SCNVector3(x: 2.0, y: Float(height), z: 16.0)
+        let obstacle5 = SCNNode(geometry: SCNBox(width: 3.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle5.position = SCNVector3(x: 0.0, y: Float(height), z: 8.0)
+        let obstacle6 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle6.position = SCNVector3(x: -1.5, y: Float(height), z: 0.0)
+        let obstacle7 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle7.position = SCNVector3(x: 1.5, y: Float(height), z: 0.0)
         firstPattern = [SCNNode]()
         firstPattern.append(obstacle1)
         firstPattern.append(obstacle2)
