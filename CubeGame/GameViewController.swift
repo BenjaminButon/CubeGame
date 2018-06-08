@@ -77,7 +77,8 @@ class GameViewController: UIViewController {
         self.scnScene = SCNScene()
         self.scnView.scene = scnScene
         scnScene.physicsWorld.contactDelegate = self
-        scnScene.background.contents = UIColor.blue
+        let imageUrl = Bundle.main.url(forResource: "background", withExtension: "jpg")
+        scnScene.background.contents = UIImage(named: "background.jpg")
     }
     func setupCamera(){
         self.cameraNode = SCNNode()
@@ -149,15 +150,13 @@ class GameViewController: UIViewController {
         self.obstacleFactory = ObstacleFactory()
         for node in self.obstacleFactory.randomPattern(){
             node.geometry?.materials.first?.diffuse.contents = UIColor.darkGray
-            self.obstacles.append(node)
-        }
-        for node in obstacles{
             node.position.z += -100
             let physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
             physicsBody.mass = 50.0
             physicsBody.contactTestBitMask = physicsBody.collisionBitMask
             node.physicsBody = physicsBody
             self.scnScene.rootNode.addChildNode(node)
+            self.obstacles.append(node)
         }
     }
     func moveObstacle(_ obstacle: SCNNode){
@@ -169,6 +168,7 @@ class GameViewController: UIViewController {
     }
     //MARK: Cube operation
     func jump(){
+        moveState = .isMoving
         cubeNode.physicsBody?.isAffectedByGravity = false
         let position = cubeNode.position
         let up = SCNAction.move(to: SCNVector3(Double(position.x), 3.0, Double(startCubePosition.z)), duration: 0.3)
@@ -180,7 +180,7 @@ class GameViewController: UIViewController {
         let action = SCNAction.group([rotate, jump])
         cubeNode.runAction(action, completionHandler: {
             () -> Void in
-            self.moveFlag = true
+            self.moveState = .canMove
             self.cubeNode.physicsBody?.isAffectedByGravity = true
         })
     }
@@ -374,6 +374,7 @@ extension GameViewController: SCNPhysicsContactDelegate{
             #endif
             DispatchQueue.main.async {
                 self.state = .gameOver
+                self.moveState = .isMoving
                 self.lblScore.isHidden = true
                 self.lblStart.isHidden = false
                 self.lblStart.text = "Game over"

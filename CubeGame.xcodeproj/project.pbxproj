@@ -16,6 +16,7 @@
 		50427A9620C954EF00C7633F /* UIColor + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50427A9520C954EF00C7633F /* UIColor + Extension.swift */; };
 		50427A9920C97C7700C7633F /* ScnAssets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 50427A9820C97C7700C7633F /* ScnAssets.scnassets */; };
 		5069C56320C7C8AF003051E7 /* Cube.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5069C56220C7C8AF003051E7 /* Cube.swift */; };
+		509483FE20CABEA00099EC02 /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 509483FD20CABEA00099EC02 /* background.jpg */; };
 		50F074B020C8166A00B9DF7B /* SCNNode + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F074AF20C8166A00B9DF7B /* SCNNode + Extension.swift */; };
 		50FB342A20C737920084D465 /* Obstacle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FB342920C737920084D465 /* Obstacle.swift */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,7 @@
 		50427A9520C954EF00C7633F /* UIColor + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Extension.swift"; sourceTree = "<group>"; };
 		50427A9820C97C7700C7633F /* ScnAssets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = ScnAssets.scnassets; sourceTree = "<group>"; };
 		5069C56220C7C8AF003051E7 /* Cube.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cube.swift; sourceTree = "<group>"; };
+		509483FD20CABEA00099EC02 /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = "<group>"; };
 		50F074AF20C8166A00B9DF7B /* SCNNode + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode + Extension.swift"; sourceTree = "<group>"; };
 		50FB342920C737920084D465 /* Obstacle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Obstacle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -72,6 +74,7 @@
 				50427A9820C97C7700C7633F /* ScnAssets.scnassets */,
 				503C26AB20C6AC0800169C67 /* Main.storyboard */,
 				503C26AE20C6AC0800169C67 /* Assets.xcassets */,
+				509483FD20CABEA00099EC02 /* background.jpg */,
 				503C26B020C6AC0800169C67 /* LaunchScreen.storyboard */,
 				503C26B320C6AC0800169C67 /* Info.plist */,
 				503C26B920C6BE4B00169C67 /* Direction.swift */,
@@ -142,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				503C26B220C6AC0800169C67 /* LaunchScreen.storyboard in Resources */,
+				509483FE20CABEA00099EC02 /* background.jpg in Resources */,
 				503C26AF20C6AC0800169C67 /* Assets.xcassets in Resources */,
 				503C26AD20C6AC0800169C67 /* Main.storyboard in Resources */,
 				50427A9920C97C7700C7633F /* ScnAssets.scnassets in Resources */,
