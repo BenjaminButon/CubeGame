@@ -10,21 +10,21 @@ import UIKit
 import SceneKit
 
 let UIColorList:[UIColor] = [
-    UIColor.black,
-    UIColor.white,
-    UIColor.red,
+    //UIColor.black,
+    //UIColor.white,
+    //UIColor.red,
     UIColor.lime,
-    UIColor.blue,
-    UIColor.yellow,
+    //UIColor.blue,
+    //UIColor.yellow,
     UIColor.cyan,
     UIColor.silver,
     UIColor.gray,
     UIColor.maroon,
     UIColor.olive,
     UIColor.brown,
-    UIColor.green,
+    //UIColor.green,
     UIColor.lightGray,
-    UIColor.magenta,
+    //UIColor.magenta,
     UIColor.orange,
     UIColor.purple,
     UIColor.teal

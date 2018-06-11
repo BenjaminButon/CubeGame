@@ -31,8 +31,8 @@ class GameViewController: UIViewController {
     var obstacleFactory: ObstacleFactory!
     let startCubePosition = SCNVector3(x: 0.0, y: 0.9, z: -14.0)
     let startObstaclePosition : SCNVector3 = SCNVector3(x: 0.0, y: 1.0, z: -100.0)
-    let speed = 0.1
-    let duration = 0.3
+    let speed = 0.05
+    let duration = 0.15
     let trackVectors: [Double] = [-2, -1, 0, 1, 2]
     var curentTrack: Int = 2
     var score = 0
@@ -117,7 +117,7 @@ class GameViewController: UIViewController {
         self.scnScene.rootNode.addChildNode(floarNode)
     }
     func setupObstacleFactory(){
-        self.obstacleFactory = ObstacleFactory()
+        self.obstacleFactory = ObstacleFactory(distance: 10.0)
     }
     func setupLabels(){
         self.lblStart = UILabel()
@@ -146,10 +146,10 @@ class GameViewController: UIViewController {
     }
     //MARK: Obstacles
     func spawnPattern(){
-        self.obstacleFactory = ObstacleFactory()
+        self.obstacleFactory = ObstacleFactory(distance: 10.0)
         for node in self.obstacleFactory.randomPattern(){
-            node.geometry?.materials.first?.diffuse.contents = UIColor.darkGray
-            node.position.z -= 100
+            node.geometry?.materials.first?.diffuse.contents = UIColor.black.withAlphaComponent(0.8)
+            node.position.z -= 120
             let physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
             physicsBody.mass = 50.0
             physicsBody.contactTestBitMask = physicsBody.collisionBitMask
@@ -170,15 +170,14 @@ class GameViewController: UIViewController {
         moveState = .isMoving
         cubeNode.physicsBody?.isAffectedByGravity = false
         let position = cubeNode.position
-        let up = SCNAction.move(to: SCNVector3(Double(position.x), 3.0, Double(startCubePosition.z)), duration: 0.3)
-        let down = SCNAction.move(to: SCNVector3(Double(position.x), 1.0, Double(startCubePosition.z)), duration: 0.3)
+        let up = SCNAction.move(to: SCNVector3(Double(position.x), 2.5, Double(startCubePosition.z)), duration: self.duration)
+        let down = SCNAction.move(to: SCNVector3(Double(position.x), 1.0, Double(startCubePosition.z)), duration: self.duration)
         up.timingMode = .easeOut
         down.timingMode = .easeIn
         let jump = SCNAction.sequence([up, down])
         let rotate = cubeRotation(direction: .forward)
         let action = SCNAction.group([rotate, jump])
         cubeNode.runAction(action, completionHandler: {
-            () -> Void in
             self.moveState = .canMove
             self.cubeNode.physicsBody?.isAffectedByGravity = true
         })
@@ -221,7 +220,7 @@ class GameViewController: UIViewController {
         }
         var rotate: SCNAction
         if direction == .forward{
-            rotate = SCNAction.rotate(by: CGFloat(90 * Float.pi / 180), around: around, duration: 0.6)
+            rotate = SCNAction.rotate(by: CGFloat(90 * Float.pi / 180), around: around, duration: 0.3)
         } else if direction == .back {
             rotate = SCNAction.rotate(by: CGFloat(360 * Float.pi / 180), around: around, duration: 1.0)
         } else {
@@ -378,7 +377,6 @@ extension GameViewController: SCNSceneRendererDelegate{
             }
         }
     }
-
 }
 
 extension GameViewController: SCNPhysicsContactDelegate{
@@ -392,12 +390,15 @@ extension GameViewController: SCNPhysicsContactDelegate{
         #if DEBUG
             //print("contact")
         #endif
-        DispatchQueue.main.async {
-            self.state = .gameOver
-            self.moveState = .isMoving
-            self.lblScore.isHidden = true
-            self.lblStart.isHidden = false
-            self.lblStart.text = "Game over"
+        if contact.contactNormal.z < 1.1 && contact.contactNormal.z > 0.9{
+            DispatchQueue.main.async {
+                self.cubeNode.removeAllActions()
+                self.state = .gameOver
+                self.moveState = .isMoving
+                self.lblScore.isHidden = true
+                self.lblStart.isHidden = false
+                self.lblStart.text = "Game over"
+            }
         }
     }
 }

@@ -16,7 +16,9 @@ class ObstacleFactory{
     var pattern02 : [SCNNode] = []
     var pattern03 : [SCNNode] = []
     var patterns : [[SCNNode]]
-    init(){
+    var distance : Float
+    init(distance: Float){
+        self.distance = distance
         patterns = [[SCNNode]]()
         setupPattern01()
         setupPattern02()
@@ -27,12 +29,13 @@ class ObstacleFactory{
     }
     
     func randomPattern() -> [SCNNode]{
-        let index = arc4random_uniform(UInt32(patterns.count))
-        return patterns[Int(index)]
-//        return patterns[0]
+//        let index = arc4random_uniform(UInt32(patterns.count))
+//        return patterns[Int(index)]
+        return patterns[0]
     }
     
     func setupPattern01(){
+        /*
         let obstacle1 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
         obstacle1.position = SCNVector3(x: -1.5, y: Float(height), z: 40.0)
         let obstacle2 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
@@ -47,14 +50,35 @@ class ObstacleFactory{
         obstacle6.position = SCNVector3(x: -1.5, y: Float(height), z: 0.0)
         let obstacle7 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
         obstacle7.position = SCNVector3(x: 1.5, y: Float(height), z: 0.0)
+        */
+        var localDistance = self.distance
+        let obstacle1 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle1.position = SCNVector3(x: -1.5, y: Float(height), z: localDistance)
+        localDistance += self.distance
+        let obstacle2 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle2.position = SCNVector3(x: 1.5, y: Float(height), z: localDistance)
+        localDistance += self.distance
+        let obstacle3 = SCNNode(geometry: SCNBox(width: 3.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle3.position = SCNVector3(x: 1.0, y: Float(height), z: localDistance)
+        localDistance += self.distance
+        let obstacle4 = SCNNode(geometry: SCNBox(width: 1.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle4.position = SCNVector3(x: 2.0, y: Float(height), z: localDistance)
+        localDistance += self.distance
+        let obstacle5 = SCNNode(geometry: SCNBox(width: 3.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle5.position = SCNVector3(x: 0.0, y: Float(height), z: localDistance)
+        localDistance += self.distance
+        let obstacle6 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle6.position = SCNVector3(x: -1.5, y: Float(height), z: localDistance)
+        let obstacle7 = SCNNode(geometry: SCNBox(width: 2.0, height: height, length: length, chamferRadius: 0.0))
+        obstacle7.position = SCNVector3(x: 1.5, y: Float(height), z: localDistance)
         pattern01 = [SCNNode]()
-        pattern01.append(obstacle1)
-        pattern01.append(obstacle2)
-        pattern01.append(obstacle3)
-        pattern01.append(obstacle4)
-        pattern01.append(obstacle5)
-        pattern01.append(obstacle6)
         pattern01.append(obstacle7)
+        pattern01.append(obstacle6)
+        pattern01.append(obstacle5)
+        pattern01.append(obstacle4)
+        pattern01.append(obstacle3)
+        pattern01.append(obstacle2)
+        pattern01.append(obstacle1)
     }
     
     func setupPattern02(){
